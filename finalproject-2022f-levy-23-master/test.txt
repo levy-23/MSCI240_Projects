@@ -1,0 +1,35 @@
+12
+one
+two
+three
+four
+five
+six
+seven
+eight
+nine
+ten
+eleven
+twelve
+18
+one two 1
+one three 1
+three two 1
+three four 1
+four two 1
+four five 1
+two five 1
+five twelve 1
+five eight 1
+twelve eight 1
+five six 1
+five seven 1
+six seven 1
+six nine 1
+seven eleven 1
+eleven eight 1
+nine ten 1
+ten twelve 20
+2
+three ten
+one eight

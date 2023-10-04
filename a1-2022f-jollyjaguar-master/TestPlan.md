@@ -1,0 +1,401 @@
+# Test Plan for Account Class
+
+
+## Strategy
+
+Our strategy is to test each unit (in this case, a unit is a method, including constructors) to handle the following cases:
+
+Normal/typical cases
+    - These are cases that we expect to appear often when the code is run.
+        - For example: common polynomials: x^2+x+1, x^3 + 2x^2+3x+4
+Extreme/unusual cases that still work
+    - These are cases that we expect to appear rarely
+        - For example: polynomial 0, large polynomials: x^100+2x^7500, etc. 
+Expected failures (Break in as many ways as possible)
+    - The code will run into an error when these cases are through
+        - For example: when there are other characters in the polynomial (letters, special characters), or when a parameter in a method is not the correct type
+
+
+## Outline
+
+### Constructors
+
+- Polynomial()
+    - Typical case
+
+- Polynomial(String)
+    - Typical Cases:
+        - Typical 1 Polynomial degree 2
+            - String: x^2 + x + 1
+                - Output: x^2 + x + 1.0
+        - Typical 2 Polynomial degree 3 with coefficients 
+            - String: 3x^3 + 2x^2 + x + 4
+                - Output: 3.0x^3 + 2.0x^2 + x + 4.0
+        - Typical 3 Negative coefficient
+            - String: -3x^2 - 1
+                - Output: -3.0x^2 - 1.0
+        - Typical 4 Ordered wrong
+            - String: x + x^2 + 1
+                - Output: x^2 + x + 1.0
+        - Typical 5 Ordered wrong 2
+            - String: 1 + 3x^3 + 2x + 5x^2
+                - Output: 3.0x^3 + 5.0x^2 + 2.0x + 1.0
+        - Typical 6 Coefficient number format
+            - String: 012341x^2 + 1.5x + 1
+                - Output: 12341.0x^2 + 1.5x + 1.0
+        - Typical 7 Polynomial Degree 4 mixed signs
+            - String: -4x^4 + x^3 - 2x^2 + 3x
+                - Output: -4.0x^4 + x^3 - 2.0x^2 + 3.0x
+        - Typical 8 Polynomial Degree 7
+            - String: x^7 + 3x^6 + 4x^5 + 3x + 2
+                - Output: x^7 + 3.0x^6 + 4.0x^5 + 3.0x + 2.0
+        - Typical 9 Polynomial Degree 6
+            - String: 3.0x^6 + 4.5x^5 + 3.0x^3 + 2x + 1
+                - Output: 3.0x^6 + 4.5x^5 + 3.1x^3 + 2.0x + 1
+    - Extreme Cases:
+        - Extreme 1 Coefficient zero
+            - String: 0x^2 + x + 3
+                - Output: x + 3.0
+        - Extreme 2 Exponent zero
+            - String: 4x^0
+                - Output: 4.0
+        - Extreme 3 Coefficient one
+            - String: 1x^2 + 1x
+                - Output: x^2 + x
+        - Extreme 4 Long coefficient 1
+            - String: 1234567x^2 + x
+                - Output: 1234567.0x^2 + x
+        - Extreme 5 Long coefficient 2
+            - String: 512345x^2 + 334455x + 123
+                - Output: 512345.0x^2 + 334455.0x + 123.0
+        - Extreme 6 Long exponent 1
+            - String: x^12345667
+                - Output: x^12345667
+        - Extreme 7 Long exponent 2
+            - String: x^9876543 + 45x^998877 + 321
+                - Output: x^9876543 + 45.0x^998877 + 321.0
+        - Extreme 8 Similar Terms
+            - String: 3x^3 + 5x^3 + x^2 + x + 6 + 3x^2 + 10x + 7
+                - Output: 8.0x^3 + 4.0x^2 + 11.0x + 13.0
+        - Extreme 9 Similar terms 2
+            - String: 2x^2+2x+3x^2+1
+                - Output: 2.0x^2 + 2.0x + 3.0x + 1
+    - Expected Failures:
+        - Failure 1 Empty
+            - String: “”
+                - Output: IllegalArgumentException
+        - Failure 2 Null
+            - String: null
+                - Output: IllegalArgumentException
+        - Failure 3 Multi variables
+            - String: ax^2 + bx + c
+                - Output: IllegalArgumentException
+        - Failure 4 Variable not x
+            - String: 4a^2 + 2a + 1
+                - Output: IllegalArgumentException
+        - Failure 5 Decimal Exponent
+            - String: x^0.5
+                - Output: IllegalArgumentException
+        - Failure 6 Special Characters
+            - String: @x^2 + $x + !
+                - Output: IllegalArgumentException
+        - Failure 7 Wrong addition format
+            - String: x^2 + 1
+                - Output: NumberFormatException
+        - Failure 8 Exponential
+            - String: 3x^x
+                - Output: IllegalArgumentException
+        - Failure 9 Negative Exponents
+            - String: 3x^-4+2x^-2
+                - Output: IllegalArgumentException 
+        - Failure 4 String with division coefficient
+            - String: x^2+3/4x
+                - Output: IllegalArgumentException 
+        - Failure 5 String with division exponent
+            - String: x^2/4 + 3
+                - Output: IllegalArgumentException
+        - Failure 6 String with multiplication coefficient
+            - String: x^2+3*4x
+                - Output: IllegalArgumentException
+        - Failure 7 String with multiplication exponent
+            - String: x^2*4 + 3
+                Output: IllegalArgumentException 
+
+### Accessors/mutators
+
+- getDegree
+    - Typical Cases:
+        - Typical 1 Degree 2
+            - p(x) = x^2 + x + 5
+                - Output: 2
+        - Typical 2 Degree 3
+            - p(x) = 2x^3 + 3x^2 + 2x + 1
+                - Output: 3
+        - Typical 3 Degree 4
+            - p(x) = 4x^4 + 3x^3 + 2x^2 + x + 9
+                - Output: 4
+    - Extreme Cases:
+        - Extreme 1 Out of order
+            - p(x) = x + x^2 + 5
+                - Output: 2
+    - Extreme 2 Out of order 2
+        - p(x) = 3x + 4x^3 + 1
+                - Output: 3
+    - Extreme 3 Zero Polynomial
+        - p(x) = 0
+            - Output: -1
+    - Expected Failures:
+
+- getCoefficient
+    - Typical Cases:
+        - Typical 1 Degree 4
+            - p(x) = 3x^4 + 1
+            - getCoefficient(4)
+                - Output: 3.0
+        - Typical 2 Degree 3
+            - p(x) = 4x^3 + 2x^2 + 3x + 1
+            - getCoefficient(3)
+                - Output: 4.0
+            - getCoefficient(2)
+                - Output: 2.0
+            - getCoefficient(1)
+                - Output: 3.0 
+    - Extreme Cases:
+        - Extreme 1 Coefficient one
+            - p(x) = x^420 + 1
+            - getCoefficient(420)
+                - Output: 1.0
+        - Extreme 2 Degree DNE
+            - p(x) = x^5+4
+            - getCoefficient(35363283)
+                - Output: 0
+        - Extreme 3 degree that does not exist 2
+            - p(x) = x^3+4
+            - getCoefficient(40)
+                - Output: 0
+    - Expected Failures:
+        - Failure 1 Negative degree
+            - p(x) = x^8 + 4
+            - getCoefficient(-69)
+                - Output: IllegalArgumentException
+
+- update
+    - Typical Cases:
+        - Typical 1 Coefficients combined 
+            - p(x) = 2x^3 + 1
+            - update(2,3)
+                - Output: 4.0x^3 + 1.0
+        - Typical 2 Initializing a coefficient 1
+            - p(x) = x + 1
+            - update(1, 2)
+                - Output: x^2 + x + 1.0
+        - Typical 3 Initializing a coefficient 2
+            - p(x) = 3x^3 + x^2 + x
+            - update(4,2)
+                - Output: 2.0x^4 + 3.0x^3 + x^2 + x
+        - Typical 4 Positive to negative
+            - p(x) = x + 1
+            - update(-3, 1)
+                - Output: -2.0x + 1.0
+        - Typical 5 Positive to negative 2
+            - p(x) = 3x^2 + 1
+            - update(-7,2)
+                - Output: -4.0x^2 + 1.0
+        - Typical 6 Negative to positive 2
+            - p(x) = -4x^2 + 1
+            - update(7,2)
+                - Output: 3.0x^2 + 1.0
+    - Extreme Cases:
+        - Extreme 1 Sum coefficients zero
+            - p(x) = 2x^2 + 1
+            - update (-2,2)
+                - Output: 1.0
+        - Extreme 2 Add zero
+            - p(x) = x^2
+            - update(0,2)
+                - Output: x^2
+        - Extreme 3 Initializing degree zero
+            - p(x) = x^4
+            - update(7,0)
+                - Output: x^4 + 7.0
+    - Expected Failures:
+        - Failure 1 Negative degree
+            - p(x) = x^8+x^9+4
+            - update(540,-2)
+                - Output: IllegalArgumentException
+
+- negate
+    - Typical Cases:
+        - Typical Case 1 Degree 2 all positive
+            - p(x) = 4x^2+3x+2
+                - Output: -4.0x^2 - 3.0x - 2.0
+        - Typical Case 2 Degree 3 all negative
+            - p(x) = -3x^3-2x^2-3x-7
+                - Output: 3.0x^3 + 2.0x^2 + 3.0x + 7.0
+        - Typical Case 3 Degree 4 mixed signs
+            - p(x) = 4x^4-2x^2+3
+                - Output: -4.0x^4 + 2.0x^2 - 3.0
+    - Extreme Cases:
+        - Extreme Case 1 Polynomial 0
+            - p(x) = 0
+                - Output: 0
+    - Expected Failures:
+
+- getValue
+    - Typical Cases:
+        - Typical case 1 Degree 3
+            - p(x) = 3x^3+4x^2+2x+1
+            - getValue(2)
+                - Output: 45
+        - Typical case 2 Degree 2
+            - p(x) = 6x^2+3x+1
+            - getValue(4)
+                - Output: 109
+    - Extreme Cases:
+        - Extreme case 1 Polynomial 0
+             - p(x) = 0
+             - getValue(3)
+                - Output: 0
+        - Extreme case 2 X is zero
+            - p(x) = 2x^2 + 4x + 3
+            - getValue(0)
+                - Output: 3
+        - Extreme case 3 Large polynomial
+            - p(x) = 3333x^7 + 2222x^6+1111x^8
+            - getValue(2)
+                - Output: 853248
+        - Extreme case 4 Large x value
+            - p(x) = x^2 + x+ 1
+            - getValue(6788)
+                - Output: 46083733
+        - Extreme case 5 Small x value
+            - p(x) = x^3
+            - getValue(0.0397)
+                - Output: 0.000062570773
+    - Expected Failures:
+        - Failure 1 Parameter is not the correct type
+            - P(x) = x^2 + x+ 1
+            - getValue(a)
+
+### Complex Functionality
+- add
+    - Typical Cases:
+        - Typical case 1 overlapping degrees
+            - p(x) = 2x + 1
+            - q(x) = 3x + 1
+                - Output: 5.0x + 2.0
+                - Output: 5.0x + 2.0
+        - Typical case 2 non-overlapping degrees
+            - p(x) = 3x^3 + 2x
+            - q(x) = 2x^2
+                - Output: 3.0x^3 + 2.0x^2 + 2.0x
+                - Output: 3.0x^3 + 2.0x^2 + 2.0x
+    - Extreme Cases:
+        - Extreme 1 sum of coefficients = 0
+            - P(x) = 2x^2 + x
+            - Q(x) = -2x^2 - x 
+                - Output: 0  
+                - Output: 0
+                **This test failed on purpose. Instructor code does not handle this case properly**
+        - Extreme 2 Large polynomials
+            - p(x) = 4x^37 + 3x^6 + x
+            - q(x) = 2x^484 + 3x^37 + 3637x^78
+                - Output: 2.0x^484 + 3637.0x^78 + 7.0x^37 + 3.0x^6 + x
+                - Output: 2.0x^484 + 3637.0x^78 + 7.0x^37 + 3.0x^6 + x
+        - Extreme 3 Out of order 
+            - p(x) = 7x^7 + 4x^37 + 4x
+            - q(x) = 2x^484 + 3x^37 + 3637x^78
+                - Output: 2.0x^484 + 3637.0x^78 + 7.0x^37 + 7.0x^7 + 4.0x
+                - Output: 2.0x^484 + 3637.0x^78 + 7.0x^37 + 7.0x^7 + 4.0x
+        - Extreme 4 Empty polynomial
+            - p(x): 9x^5 + 80x^7
+            - q(x): empty
+                - Output: 9x^5 + 80x^7
+                - Output: 9x^5 + 80x^7
+                **This test failed on purpose. Instructor code does not handle this case properly**
+    - Expected Failures:
+
+- subtract
+   - Typical Cases:
+        - Typical case 1 Overlapping degrees
+            - p(x) = 2x + 1
+            - q(x) = 3x + 1
+                - Output: x
+                - Output: -x
+        - Typical case 2 Non-overlapping degrees
+            - p(x) = 3x^3 + 2x
+            - q(x) = 2x^2
+                - Output: 3.0x^3 - 2.0x^2 + 2.0x
+                - Output: -3.0x^3 + 2.0x^2 - 2.0x
+    - Extreme Cases:
+        - Extreme 1 Difference equals 0
+            - p(x) = 2x^2 + x
+            - q(x) = 2x^2 + x
+                - Output: 0
+                - Output: 0
+                 **This test failed on purpose. Instructor code does not handle this case properly**
+        - Extreme 2 Difference of large polynomials
+            - p(x) = 4x^37 + 3x^6 + x
+            - q(x) = 2x^484 + 3x^37 + 3637x^78
+                - Output: -2.0x^484 - 3637.0x^78 + x^37 + 3.0x^6 + x
+                - Output: 2.0x^484 + 3637.0x^78 - x^37 - 3.0x^6 - x
+        - Extreme 3 Difference of out of order polynomials
+            - p(x) = 7x^7 + 4x^37 + 4x
+            - q(x) = 2x^484 + 3x^37 + 3637x^78
+                - Output: -2.0x^484 - 3637.0x^78 + x^37 + 7.0x^7 + 4.0x
+                - Output: 2.0x^484 + 3637.0x^78 - x^37 - 7.0x^7 - 4.0x
+        - Extreme 4 Empty polynomial
+            - p(x) = 9.0x^5 + 80.0x^7
+            - q(x) = empty
+                - Output: 9.0x^5 + 80.0x^7
+                - Output: -9.0x^5 - 80.0x^7
+                **This test failed on purpose. Instructor code does not handle this case properly**
+    - Expected Failures:
+
+- getDerivative
+    - Typical Cases:
+        - Typical 1 Degree 2
+            - p(x) = 2x^2 + 3x + 5
+                - Output: 4.0x + 3.0
+        - Typical 2 Degree 3
+            - p(x) = 3x^3 + 6x^2 + 8x + 9
+                - Output: 9.0x^2 + 12.0x + 8.0
+        - Typical 3 Negative derivative
+            - p(x) = -90x^7 + 11x^9 - 2x^4 - 9
+                - Output: 99.0x^8 - 630.0x^6 - 8.0x^3
+     - Extreme Cases:
+        - Extreme 1 Large polynomial
+            - p(x) = 8888x^99 + 7777x^88 + 6666x^14
+                - Output: 879912.0x^98 + 684376.0x^87 + 93324.0x^13
+        - Extreme 2 Polynomial 0
+            - p(x) = 0
+                - Output: 0
+    - Expected Failures:
+
+- toString
+    - Typical Cases:
+        - Typical 1 Negative coefficient
+            - p(x) = -3x^2 - 1
+                - Output: -3.0x^2 - 1.0
+        - Typical 2 Coefficient to double
+            - p(x) = 2x^2
+                - Output: 2.0x^2
+        - Typical 3 Standard polynomial
+            - p(x) = 2x^2 + x + 1
+                - Output: 2.0x^2 + x + 1.0
+    - Extreme Cases:
+        - Extreme 1 Coefficient zero
+            - p(x) = 0x^2 + x + 3
+                - Output: x + 3.0
+        - Extreme 2 Exponent zero
+            - p(x) = 6x^0 + 7
+                - Output: 13.0
+        - Extreme 3 Coefficient one
+            - p(x) = -1x^2 + 1x
+                - Output: -x^2 + x
+        - Extreme 4 Polynomial 0
+            - p(x) = 0
+                - Output: 0
+    - Expected Failures:
+
+

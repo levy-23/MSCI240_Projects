@@ -1,0 +1,32 @@
+plugins {
+	id 'java'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testImplementation('org.junit.jupiter:junit-jupiter:5.6.3')
+	testImplementation files('libs/teacherpoly.jar')
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+}
+
+def testOnInstructorCode = tasks.register('testOnInstructorCode', Test) {
+		description = 'Runs unit tests on instructor-provided code.'
+    	group = 'verification'
+
+		project.sourceSets.test.runtimeClasspath -= files("${projectDir}/build/classes/java/main") - files("${projectDir}/build/resources/main")
+		project.sourceSets.test.compileClasspath -= files("${projectDir}/build/classes/java/main") -  files("${projectDir}/build/resources/main")
+
+		useJUnitPlatform()
+			testLogging {
+			events "passed", "skipped", "failed"
+		}
+}

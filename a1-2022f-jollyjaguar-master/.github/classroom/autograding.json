@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "Student Tests on Instructor Code",
+      "setup": "",
+      "run": "gradle testOnInstructorCode",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    },
+    {
+      "name": "Student Tests on Student Code",
+      "setup": "",
+      "run": "gradle test",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    }
+  ]
+}
